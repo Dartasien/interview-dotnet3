@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31808.319
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GroceryStoreAPI", "GroceryStoreAPI\GroceryStoreAPI.csproj", "{5AD12FE0-F57B-4549-8DC3-A8BDAE56A26B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroceryStoreAPI.Data", "CustomerApi.Data\GroceryStoreAPI.Data.csproj", "{17049890-2936-4AC6-9846-71B8BACAB0D0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroceryStoreAPI.Data", "GroceryStoreAPI.Data\GroceryStoreAPI.Data.csproj", "{17049890-2936-4AC6-9846-71B8BACAB0D0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tests", "tests\tests.csproj", "{D14B6302-9806-4FCA-86B0-041D6227FF42}"
 EndProject
