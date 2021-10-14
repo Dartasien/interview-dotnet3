@@ -6,7 +6,12 @@ namespace GroceryStoreAPI.Data
 {
     public class CustomerContext : DbContext
     {
-        Customer Customers { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+
+        public CustomerContext(DbContextOptions<CustomerContext> options)
+        : base(options)
+        {
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
