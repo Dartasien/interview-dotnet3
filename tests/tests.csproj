@@ -19,4 +19,13 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GroceryStoreAPI.Data\GroceryStoreAPI.Data.csproj" />
+    <ProjectReference Include="..\GroceryStoreAPI\GroceryStoreAPI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>
