@@ -21,6 +21,14 @@ namespace GroceryStoreAPI.Data.Repositories
             return customer;
         }
 
+        public async Task<Customer> GetCustomerAsync(string customerName)
+        {
+            var customer = await _customerContext.Customers
+                .FirstOrDefaultAsync(c => c.Name.ToLower() == customerName.ToLower());
+
+            return customer;
+        }
+
         public async Task<IEnumerable<Customer>> GetAllCustomersAsync() => await _customerContext.Customers.ToListAsync();
 
         public async Task<bool> CreateCustomerAsync(string customerName)

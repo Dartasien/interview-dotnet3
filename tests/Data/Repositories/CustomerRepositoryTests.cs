@@ -61,6 +61,70 @@ namespace tests.Data.Repositories
             }
         }
 
+
+
+        [Fact]
+        public async void GetCustomerAsync_NameExists_ReturnsCustomer()
+        {
+            const string customerName = "Testy McPerson";
+
+            using (var context = new CustomerContext(ContextOptions))
+            {
+                context.Database.EnsureDeleted();
+                context.Database.EnsureCreated();
+
+                context.Customers.Add(new Customer { Name = customerName });
+                context.SaveChanges();
+
+                var customerRepository = new CustomerRepository(context);
+
+                var customer = await customerRepository.GetCustomerAsync(customerName);
+
+                Assert.Equal(customerName, customer.Name);
+            }
+        }
+
+
+        [Fact]
+        public async void GetCustomerAsync_NameExistsWithDifferentCase_ReturnsCustomer()
+        {
+            const string customerName = "Testy McPerson";
+            const string testedName = "testy mcperson";
+
+            using (var context = new CustomerContext(ContextOptions))
+            {
+                context.Database.EnsureDeleted();
+                context.Database.EnsureCreated();
+
+                context.Customers.Add(new Customer { Name = customerName });
+                context.SaveChanges();
+
+                var customerRepository = new CustomerRepository(context);
+
+                var customer = await customerRepository.GetCustomerAsync(testedName);
+
+                Assert.Equal(customerName, customer.Name);
+            }
+        }
+
+        [Fact]
+        public async void GetCustomerAsync_NameDoesNotExist_ReturnsNull()
+        {
+            const string customerName = "Testy McPerson";
+
+            using (var context = new CustomerContext(ContextOptions))
+            {
+                context.Database.EnsureDeleted();
+                context.Database.EnsureCreated();
+
+                var customerRepository = new CustomerRepository(context);
+
+                var customer = await customerRepository.GetCustomerAsync(customerName);
+
+                Assert.Null(customer);
+            }
+        }
+
         [Fact]
         public async void GetAllCustomersAsync_HasTwoCustomers_ReturnsTwoCustomers()
         {

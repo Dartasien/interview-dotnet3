@@ -7,6 +7,7 @@ namespace GroceryStoreAPI.Data.Repositories
     public interface ICustomerRepository
     {
         Task<Customer> GetCustomerAsync(int customerId);
+        Task<Customer> GetCustomerAsync(string customerName);
         Task<IEnumerable<Customer>> GetAllCustomersAsync();
         Task<bool> CreateCustomerAsync(string customerName);
         Task<bool> UpdateCustomerAsync(int customerId, string customerName);
