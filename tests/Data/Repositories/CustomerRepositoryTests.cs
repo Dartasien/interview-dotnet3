@@ -181,7 +181,7 @@ namespace tests.Data.Repositories
         [Fact]
         public async void UpdateCustomerAsync_IdDoesNotExist_ReturnsFalse()
         {
-            var customerName = "Testy McPerson";
+            const string customerName = "Testy McPerson";
 
             using (var context = new CustomerContext(ContextOptions))
             {
@@ -210,6 +210,50 @@ namespace tests.Data.Repositories
                 var customerRepository = new CustomerRepository(context);
 
                 var result = await customerRepository.UpdateCustomerAsync(originalCustomerName, expectedCustomerName);
+
+                Assert.False(result);
+            }
+        }
+
+        [Fact]
+        public async void DeleteCustomerAsync_IdExists_DeletesCustomer()
+        {
+            const int expectedCount = 0;
+            const int expectedId = 1;
+            const string customerName = "Testy McPerson";
+
+            using (var context = new CustomerContext(ContextOptions))
+            {
+                context.Database.EnsureDeleted();
+                context.Database.EnsureCreated();
+
+                context.Customers.Add(new Customer { Id = expectedId, Name = customerName });
+                context.SaveChanges();
+
+                var customerRepository = new CustomerRepository(context);
+                
+                var result = await customerRepository.DeleteCustomerAsync(expectedId);
+
+                Assert.True(result);
+                Assert.Equal(expectedCount, context.Customers.Count());
+            }
+        }
+
+        [Fact]
+        public async void DeleteCustomerAsync_IdDoesNotExist_ReturnsFalse()
+        {
+            const int expectedId = 1;
+
+            using (var context = new CustomerContext(ContextOptions))
+            {
+                context.Database.EnsureDeleted();
+                context.Database.EnsureCreated();
+
+                context.SaveChanges();
+
+                var customerRepository = new CustomerRepository(context);
+
+                var result = await customerRepository.DeleteCustomerAsync(expectedId);
 
                 Assert.False(result);
             }

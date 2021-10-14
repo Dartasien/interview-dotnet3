@@ -11,5 +11,6 @@ namespace GroceryStoreAPI.Data.Repositories
         Task<bool> CreateCustomerAsync(string customerName);
         Task<bool> UpdateCustomerAsync(int customerId, string customerName);
         Task<bool> UpdateCustomerAsync(string originalCustomerName, string newCustomerName);
+        Task<bool> DeleteCustomerAsync(int customerId);
     }
 }

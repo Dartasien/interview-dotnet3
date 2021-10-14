@@ -64,5 +64,19 @@ namespace GroceryStoreAPI.Data.Repositories
 
             return saved == 1;
         }
+
+        public async Task<bool> DeleteCustomerAsync(int customerId)
+        {
+            var customer = await _customerContext.Customers.FindAsync(customerId);
+
+            if (customer != null)
+            {
+                _customerContext.Customers.Remove(customer);
+                var saved = await _customerContext.SaveChangesAsync();
+
+                return saved == 1;
+            }
+            return false;
+        }
     }
 }   
