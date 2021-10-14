@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 namespace GroceryStoreAPI
 {
@@ -46,6 +47,8 @@ namespace GroceryStoreAPI
                 c.RoutePrefix = string.Empty;
             });
 
+            app.UseSerilogRequestLogging();
+            
             app.UseHttpsRedirection();
 
             app.UseRouting();
