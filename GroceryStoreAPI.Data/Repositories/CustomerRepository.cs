@@ -1,5 +1,6 @@
 ﻿using GroceryStoreAPI.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace GroceryStoreAPI.Data.Repositories
@@ -12,6 +13,15 @@ namespace GroceryStoreAPI.Data.Repositories
         {
             _customerContext = customerContext;
         }
+
+        public async Task<Customer> GetCustomerAsync(int customerId)
+        {
+            var customer = await _customerContext.Customers.FindAsync(customerId);
+
+            return customer;
+        }
+
+        public async Task<IEnumerable<Customer>> GetAllCustomersAsync() => await _customerContext.Customers.ToListAsync();
 
         public async Task<bool> CreateCustomerAsync(string customerName)
         {
