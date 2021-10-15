@@ -1,6 +1,11 @@
+using GroceryStoreAPI.Data;
+using GroceryStoreAPI.Data.Repositories;
+using GroceryStoreAPI.Services.MappingProfiles;
+using GroceryStoreAPI.Services.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,6 +32,14 @@ namespace GroceryStoreAPI
                 config.DefaultApiVersion = new ApiVersion(1, 0);
                 config.AssumeDefaultVersionWhenUnspecified = true;
             });
+
+            services.AddSingleton(Log.Logger); 
+            services.AddDbContext<CustomerContext>(
+                options => options.UseSqlite(@"Filename=GroceryStoreCustomers.sqlite3")
+            );
+            services.AddAutoMapper(typeof(CustomerProfile));
+            services.AddTransient<ICustomerService, CustomerService>();
+            services.AddTransient<ICustomerRepository, CustomerRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

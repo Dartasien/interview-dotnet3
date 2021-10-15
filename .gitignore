@@ -386,4 +386,5 @@ FodyWeavers.xsd
 # JetBrains Rider
 .idea/
 *.sln.iml
-/GroceryStoreAPI.Data/GroceryStoreCustomers.sqlite3
+*.sqlite3
+GroceryStoreAPI/logs*.txt

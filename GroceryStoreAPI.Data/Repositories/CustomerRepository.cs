@@ -14,16 +14,24 @@ namespace GroceryStoreAPI.Data.Repositories
             _customerContext = customerContext;
         }
 
-        public async Task<Customer> GetCustomerAsync(int customerId)
+        public async Task<Customer> GetAsync(int customerId)
         {
             var customer = await _customerContext.Customers.FindAsync(customerId);
 
             return customer;
         }
 
-        public async Task<IEnumerable<Customer>> GetAllCustomersAsync() => await _customerContext.Customers.ToListAsync();
+        public async Task<Customer> GetAsync(string customerName)
+        {
+            var customer = await _customerContext.Customers
+                .FirstOrDefaultAsync(c => c.Name.ToLower() == customerName.ToLower());
 
-        public async Task<bool> CreateCustomerAsync(string customerName)
+            return customer;
+        }
+
+        public async Task<IEnumerable<Customer>> GetAllAsync() => await _customerContext.Customers.ToListAsync();
+
+        public async Task<Customer> CreateAsync(string customerName)
         {
             var customer = new Customer
             {
@@ -32,40 +40,26 @@ namespace GroceryStoreAPI.Data.Repositories
 
             _customerContext.Customers.Add(customer);
 
-            var saved = await _customerContext.SaveChangesAsync();
+            await _customerContext.SaveChangesAsync();
 
-            return saved == 1;
+            return customer;
         }
 
-        public async Task<bool> UpdateCustomerAsync(int customerId, string customerName)
+        public async Task<Customer> UpdateAsync(Customer customer)
         {
-            var customer = await _customerContext.Customers.FindAsync(customerId);
+            var existingCustomer = await _customerContext.Customers.FindAsync(customer.Id);
 
-            if (customer == null)
-                return false;
+            if (existingCustomer == null)
+                return existingCustomer;
 
-            customer.Name = customerName;
+            existingCustomer.Name = customer.Name;
 
-            var saved = await _customerContext.SaveChangesAsync();
+            await _customerContext.SaveChangesAsync();
 
-            return saved == 1;
+            return existingCustomer;
         }
 
-        public async Task<bool> UpdateCustomerAsync(string originalCustomerName, string newCustomerName)
-        {
-            var customer = await _customerContext.Customers.FirstOrDefaultAsync(c => c.Name == originalCustomerName);
-
-            if (customer == null)
-                return false;
-
-            customer.Name = newCustomerName;
-
-            var saved = await _customerContext.SaveChangesAsync();
-
-            return saved == 1;
-        }
-
-        public async Task<bool> DeleteCustomerAsync(int customerId)
+        public async Task<bool> DeleteAsync(int customerId)
         {
             var customer = await _customerContext.Customers.FindAsync(customerId);
 
