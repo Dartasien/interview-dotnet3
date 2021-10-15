@@ -33,7 +33,7 @@ namespace tests.Data.Repositories
 
                 var customerRepository = new CustomerRepository(context);
 
-                var customer = await customerRepository.GetCustomerAsync(expectedId);
+                var customer = await customerRepository.GetAsync(expectedId);
 
                 Assert.Equal(customerName, customer.Name);
             }
@@ -55,7 +55,7 @@ namespace tests.Data.Repositories
 
                 var customerRepository = new CustomerRepository(context);
 
-                var customer = await customerRepository.GetCustomerAsync(expectedId);
+                var customer = await customerRepository.GetAsync(expectedId);
 
                 Assert.Null(customer);
             }
@@ -78,7 +78,7 @@ namespace tests.Data.Repositories
 
                 var customerRepository = new CustomerRepository(context);
 
-                var customer = await customerRepository.GetCustomerAsync(customerName);
+                var customer = await customerRepository.GetAsync(customerName);
 
                 Assert.Equal(customerName, customer.Name);
             }
@@ -101,7 +101,7 @@ namespace tests.Data.Repositories
 
                 var customerRepository = new CustomerRepository(context);
 
-                var customer = await customerRepository.GetCustomerAsync(testedName);
+                var customer = await customerRepository.GetAsync(testedName);
 
                 Assert.Equal(customerName, customer.Name);
             }
@@ -119,7 +119,7 @@ namespace tests.Data.Repositories
 
                 var customerRepository = new CustomerRepository(context);
 
-                var customer = await customerRepository.GetCustomerAsync(customerName);
+                var customer = await customerRepository.GetAsync(customerName);
 
                 Assert.Null(customer);
             }
@@ -143,7 +143,7 @@ namespace tests.Data.Repositories
 
                 var customerRepository = new CustomerRepository(context);
 
-                var customers = await customerRepository.GetAllCustomersAsync();
+                var customers = await customerRepository.GetAllAsync();
 
                 Assert.Equal(expectedCount, customers.Count());
             }
@@ -169,7 +169,7 @@ namespace tests.Data.Repositories
 
                 var customerRepository = new CustomerRepository(context);
 
-                var customers = await customerRepository.GetAllCustomersAsync();
+                var customers = await customerRepository.GetAllAsync();
 
                 Assert.Equal(expectedCount, customers.Count());
             }
@@ -188,7 +188,7 @@ namespace tests.Data.Repositories
 
                 var customerRepository = new CustomerRepository(context);
 
-                await customerRepository.CreateCustomerAsync(customerName);
+                await customerRepository.CreateAsync(customerName);
 
                 Assert.Equal(customerName, context.Customers.Find(expectedId).Name);
             }
@@ -198,53 +198,30 @@ namespace tests.Data.Repositories
         public async void UpdateCustomerAsync_HasCustomerId_UpdatesCustomerName()
         {
             const int expectedId = 1;
-            const string originalCustomerName = "Testy McPerson";
-            const string expectedCustomerName = "Testy McPherson";
+            const string originalCustomName = "Testy McPerson";
+            const string customerName = "Testy McPerson";
 
             using (var context = new CustomerContext(ContextOptions))
             {
                 context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
 
-                context.Customers.Add(new Customer { Name = originalCustomerName });
+                context.Customers.Add(new Customer { Name = originalCustomName });
                 context.SaveChanges();
 
 
                 var customerRepository = new CustomerRepository(context);
 
-                await customerRepository.UpdateCustomerAsync(expectedId, expectedCustomerName);
+                await customerRepository.UpdateAsync(new Customer { Id = expectedId, Name = customerName});
 
-                Assert.Equal(expectedCustomerName, context.Customers.Find(expectedId).Name);
-            }
-        }
-
-        [Fact]
-        public async void UpdateCustomerAsync_HasNames_UpdatesCustomerNames()
-        {
-            const int expectedId = 1;
-            const string originalCustomerName = "Testy McPerson";
-            const string expectedCustomerName = "Testy McPherson";
-
-            using (var context = new CustomerContext(ContextOptions))
-            {
-                context.Database.EnsureDeleted();
-                context.Database.EnsureCreated();
-
-                context.Customers.Add(new Customer { Name = originalCustomerName });
-                context.SaveChanges();
-
-
-                var customerRepository = new CustomerRepository(context);
-
-                await customerRepository.UpdateCustomerAsync(originalCustomerName, expectedCustomerName);
-
-                Assert.Equal(expectedCustomerName, context.Customers.Find(expectedId).Name);
+                Assert.Equal(customerName, context.Customers.Find(expectedId).Name);
             }
         }
 
         [Fact]
         public async void UpdateCustomerAsync_IdDoesNotExist_ReturnsFalse()
         {
+            const int customerId = 1;
             const string customerName = "Testy McPerson";
 
             using (var context = new CustomerContext(ContextOptions))
@@ -254,28 +231,9 @@ namespace tests.Data.Repositories
 
                 var customerRepository = new CustomerRepository(context);
 
-                var result = await customerRepository.UpdateCustomerAsync(1, customerName);
+                var result = await customerRepository.UpdateAsync(new Customer { Id = customerId, Name = customerName});
 
-                Assert.False(result);
-            }
-        }
-
-        [Fact]
-        public async void UpdateCustomerAsync_NameDoesNotExist_ReturnsFalse()
-        {
-            const string originalCustomerName = "Testy McPerson";
-            const string expectedCustomerName = "Testy McPherson";
-
-            using (var context = new CustomerContext(ContextOptions))
-            {
-                context.Database.EnsureDeleted();
-                context.Database.EnsureCreated();
-
-                var customerRepository = new CustomerRepository(context);
-
-                var result = await customerRepository.UpdateCustomerAsync(originalCustomerName, expectedCustomerName);
-
-                Assert.False(result);
+                Assert.Null(result);
             }
         }
 
@@ -296,7 +254,7 @@ namespace tests.Data.Repositories
 
                 var customerRepository = new CustomerRepository(context);
                 
-                var result = await customerRepository.DeleteCustomerAsync(expectedId);
+                var result = await customerRepository.DeleteAsync(expectedId);
 
                 Assert.True(result);
                 Assert.Equal(expectedCount, context.Customers.Count());
@@ -317,7 +275,7 @@ namespace tests.Data.Repositories
 
                 var customerRepository = new CustomerRepository(context);
 
-                var result = await customerRepository.DeleteCustomerAsync(expectedId);
+                var result = await customerRepository.DeleteAsync(expectedId);
 
                 Assert.False(result);
             }
